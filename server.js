@@ -5,6 +5,7 @@ require("dotenv").config();
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const errorHandler = require("./middleware/errorMiddleware");
 
 const app = express();
 
@@ -19,9 +20,11 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 
+
 app.get("/", (req, res) => {
   res.send("Job Application Tracker API is running...");
 });
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

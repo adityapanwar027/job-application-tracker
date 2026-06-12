@@ -5,6 +5,12 @@ const createJob = async (req, res) => {
   try {
     const { company, position, status } = req.body;
 
+   if (!company || !position) {
+    return res.status(400).json({
+        message: "Company and position are required",
+    });
+   }
+
     const newJob = await Job.create({
       company,
       position,
