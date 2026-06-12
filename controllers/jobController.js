@@ -1,5 +1,6 @@
 const Job = require("../models/job");
 
+// Create Job
 const createJob = async (req, res) => {
   try {
     const { company, position, status } = req.body;
@@ -19,9 +20,12 @@ const createJob = async (req, res) => {
   }
 };
 
+// Get Jobs
 const getJob = async (req, res) => {
   try {
-    const jobs = await Job.find({ user: req.user.id });
+    const jobs = await Job.find({
+      user: req.user.id,
+    });
 
     res.status(200).json(jobs);
   } catch (error) {
@@ -31,4 +35,38 @@ const getJob = async (req, res) => {
   }
 };
 
-module.exports = { createJob, getJob };
+// Update Job
+const updateJob = async (req, res) => {
+  try {
+    const job = await Job.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job not found",
+      });
+    }
+
+    const updatedJob = await Job.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json(updatedJob);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  createJob,
+  getJob,
+  updateJob,
+};
