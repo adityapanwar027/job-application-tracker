@@ -35,6 +35,28 @@ const getJob = async (req, res) => {
   }
 };
 
+// Get single job
+const getSingleJob = async (req, res) => {
+  try {
+    const job = await Job.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job not found",
+      });
+    }
+
+    res.status(200).json(job);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 // Update Job
 const updateJob = async (req, res) => {
   try {
@@ -94,6 +116,7 @@ const deleteJob = async (req, res) => {
 module.exports = {
   createJob,
   getJob,
+  getSingleJob,
   updateJob,
   deleteJob,
 };
