@@ -1,4 +1,4 @@
-const Job = require("../models/job");
+const Job = require("../models/Job");
 
 // Create Job
 const createJob = async (req, res) => {
@@ -65,8 +65,35 @@ const updateJob = async (req, res) => {
   }
 };
 
+// Delete Job
+const deleteJob = async (req, res) => {
+  try {
+    const job = await Job.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job not found",
+      });
+    }
+
+    await Job.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      message: "Job deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createJob,
   getJob,
   updateJob,
+  deleteJob,
 };
