@@ -1,3 +1,4 @@
+const job = require("../models/Job");
 const Job = require("../models/Job");
 
 // Create Job
@@ -46,9 +47,23 @@ const getJob = async (req, res) => {
       ];
     }
 
-    const jobs = await Job.find(queryObject);
+    // const jobs = await Job.find(queryObject);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+    const jobs = await job.find(queryObject)
+    .skip(skip)
+    .limit(limit);
 
-    res.status(200).json(jobs);
+    const totalJobs = await Job.countDocuments(queryObject);
+    res.status(200).json({
+      jobs,
+      totalJobs,
+      currentPage: page,
+      totalPages: Math.ceil(totalJobs / limit),
+    })
+
+// res.status(200).json(jobs);
   } catch (error) {
     res.status(500).json({
       message: error.message,
