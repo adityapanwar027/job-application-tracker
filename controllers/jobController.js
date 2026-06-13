@@ -1,5 +1,6 @@
 const job = require("../models/Job");
 const Job = require("../models/Job");
+const { create } = require("../models/User");
 
 // Create Job
 const createJob = async (req, res) => {
@@ -36,6 +37,17 @@ const getJob = async (req, res) => {
       user: req.user.id,
     };
 
+   let sortOption = {};
+   if (req.query.sort === "latest") {
+     sortOption = { createdAt: -1 };
+   } else if (req.query.sort === "oldest") {
+     sortOption = { createdAt: 1 };
+   } else if (req.query.sort === "a-z") {
+     sortOption = { createdAt: 1 };
+   } else if (req.query.sort === "z-a") {
+     sortOption = { createdAt: -1 };
+   }
+
     if (status) {
       queryObject.status = status;
     }
@@ -52,6 +64,7 @@ const getJob = async (req, res) => {
     const limit = Number(req.query.limit) || 5;
     const skip = (page - 1) * limit;
     const jobs = await job.find(queryObject)
+    .sort(sortOption)
     .skip(skip)
     .limit(limit);
 
