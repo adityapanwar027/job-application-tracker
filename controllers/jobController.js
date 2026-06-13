@@ -77,6 +77,32 @@ const getSingleJob = async (req, res) => {
   }
 };
 
+// Get job status
+const getJobStats = async (req, res) => {
+  try {
+    const jobs = await Job.find({
+      user: req.user.id,
+    });
+
+    const stats = {
+      Applied: 0,
+      Interview: 0,
+      Rejected: 0,
+      Offer: 0,
+    };
+
+    jobs.forEach((job) => {
+      stats[job.status]++;
+    });
+
+    res.status(200).json(stats);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 // Update Job
 const updateJob = async (req, res) => {
   try {
@@ -137,6 +163,7 @@ module.exports = {
   createJob,
   getJob,
   getSingleJob,
+  getJobStats,
   updateJob,
   deleteJob,
 };
