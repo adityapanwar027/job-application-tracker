@@ -29,9 +29,24 @@ const createJob = async (req, res) => {
 // Get Jobs
 const getJob = async (req, res) => {
   try {
-    const jobs = await Job.find({
+    const { status, search } = req.query;
+
+    let queryObject = {
       user: req.user.id,
-    });
+    };
+
+    if (status) {
+      queryObject.status = status;
+    }
+
+    if (search) {
+      queryObject.$or = [
+        { company: { $regex: search, $options: "i" } },
+        { position: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const jobs = await Job.find(queryObject);
 
     res.status(200).json(jobs);
   } catch (error) {
@@ -40,7 +55,6 @@ const getJob = async (req, res) => {
     });
   }
 };
-
 // Get single job
 const getSingleJob = async (req, res) => {
   try {
