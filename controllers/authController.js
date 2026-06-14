@@ -14,6 +14,19 @@ const registerUser = async (req, res) => {
         });
     }
 
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 character",
+      });
+    }
+
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        message: "Please enter a valid mail",
+      });
+    }
+
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -115,6 +128,17 @@ const updateUserProfile = async (req, res) => {
   try {
     
    const user = await User.findById(req.user.id);
+
+   if (req.body.email) {
+     const emailRegex = /^\S+@\.\S+$/;
+     
+     if (!emailRegex.test(req.body.email)) {
+       return res.status(400).json({
+        message: "Please provide a valid email"
+       })
+     }
+   }
+   
    if (!user) {
      return res.status(400).json({
       message: "User not found",
@@ -123,6 +147,15 @@ const updateUserProfile = async (req, res) => {
 
    user.name = req.body.name || user.name;
    user.email = req.body.email || user.email;
+
+   if (req.body.password) {
+     if (req.body.password.length < 6) {
+       return res.status(400).json({
+        message: "Password must be at least characters",
+       });
+     }
+     user.password = await bcrypt.hash(req.body.password, 10);
+   }
 
    await user.save();
 

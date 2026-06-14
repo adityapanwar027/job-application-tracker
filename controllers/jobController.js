@@ -13,6 +13,13 @@ const createJob = async (req, res) => {
     });
    }
 
+   const validStatus = ["Applied", "Interview", "Rejected", "Offer"];
+   if (status && !validStatus.includes(status)) {
+     return res.status(400).json({
+      message: "Invalid job status",
+     });
+   }
+
     const newJob = await Job.create({
       company,
       position,
