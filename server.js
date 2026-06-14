@@ -1,3 +1,5 @@
+const rateLimit = require("express-rate-limit")
+const helmet = require("helmet")
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -13,8 +15,23 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true,
+  })
+);
+app.use(helmet());
 app.use(express.json());
+app.use(limiter());
+
+// Limiter
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many requests, please try again later",
+})
 
 // Routes
 app.use("/api/auth", authRoutes);
