@@ -1,10 +1,11 @@
+const asyncHandler = require("express-async-handler");
 const job = require("../models/Job");
 const Job = require("../models/Job");
 const { create } = require("../models/User");
 
 // Create Job
-const createJob = async (req, res) => {
-  try {
+const createJob = asyncHandler (async (req, res) => {
+ 
     const { company, position, status } = req.body;
 
    if (!company || !position) {
@@ -28,16 +29,11 @@ const createJob = async (req, res) => {
     });
 
     res.status(201).json(newJob);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+});
 
 // Get Jobs
-const getJob = async (req, res) => {
-  try {
+const getJob = asyncHandler (async (req, res) => {
+  
     const { status, search } = req.query;
 
     let queryObject = {
@@ -81,18 +77,13 @@ const getJob = async (req, res) => {
       totalJobs,
       currentPage: page,
       totalPages: Math.ceil(totalJobs / limit),
-    })
+    })  
+});
 
-// res.status(200).json(jobs);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+
 // Get single job
-const getSingleJob = async (req, res) => {
-  try {
+const getSingleJob = asyncHandler (async ( req, res) => {
+  
     const job = await Job.findOne({
       _id: req.params.id,
       user: req.user.id,
@@ -105,16 +96,11 @@ const getSingleJob = async (req, res) => {
     }
 
     res.status(200).json(job);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+});
 
 // Get job status
-const getJobStats = async (req, res) => {
-  try {
+const getJobStats = asyncHandler (async ( req, res) => {
+  
     const jobs = await Job.find({
       user: req.user.id,
     });
@@ -131,16 +117,11 @@ const getJobStats = async (req, res) => {
     });
 
     res.status(200).json(stats);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+});
 
 // Update Job
-const updateJob = async (req, res) => {
-  try {
+const updateJob = asyncHandler (async ( req, res) => {
+  
     const job = await Job.findOne({
       _id: req.params.id,
       user: req.user.id,
@@ -161,16 +142,12 @@ const updateJob = async (req, res) => {
     );
 
     res.status(200).json(updatedJob);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+
+});
 
 // Delete Job
-const deleteJob = async (req, res) => {
-  try {
+const deleteJob = asyncHandler (async ( req, res) => {
+  
     const job = await Job.findOne({
       _id: req.params.id,
       user: req.user.id,
@@ -187,12 +164,8 @@ const deleteJob = async (req, res) => {
     res.status(200).json({
       message: "Job deleted successfully",
     });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+  
+});
 
 module.exports = {
   createJob,

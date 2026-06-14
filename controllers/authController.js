@@ -1,13 +1,13 @@
+const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { unsubscribe } = require("../routes/authRoutes");
 
 // Register User
-const registerUser = async (req, res) => {
-  try {
+const registerUser = asyncHandler ( async (req, res) => {
+  
     const { name, email, password } = req.body;
-
     if (!name || !email || !password) {
         return res.status(400).json({
             message: "Please provide all fields",
@@ -28,7 +28,6 @@ const registerUser = async (req, res) => {
     }
 
     const userExists = await User.findOne({ email });
-
     if (userExists) {
       return res.status(400).json({
         message: "User already exists",
@@ -36,7 +35,6 @@ const registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await User.create({
       name,
       email,
@@ -47,16 +45,11 @@ const registerUser = async (req, res) => {
       message: "User created successfully",
       user,
     });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+});
 
 // Login User
-const loginUser = async (req, res) => {
-  try {
+const loginUser = asyncHandler (async (req, res) => {
+  
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -95,17 +88,13 @@ const loginUser = async (req, res) => {
       message: "Login successfully",
       token,
     });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+ 
+});
 
 
 // Get user profile 
-const getUserProfile = async (req, res) => {
-    try {
+const getUserProfile = asyncHandler (async(req, res) => {
+    
         
     const user = await User.findById(req.user.id).select("-password");
     if (!user) {
@@ -115,17 +104,11 @@ const getUserProfile = async (req, res) => {
     }
 
     res.status(200).json(user);
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-}
+    
+});
 
 // Update User Profile API
-const updateUserProfile = async (req, res) => {
-  try {
+const updateUserProfile = asyncHandler (async (req, res) => {
     
    const user = await User.findById(req.user.id);
 
@@ -163,12 +146,7 @@ const updateUserProfile = async (req, res) => {
     message: "Profile updated succesfully",
    });
 
-  } catch (error) {
-     res.status(500).json({
-      message: error.message
-     });
-  }
-}
+});
 
 
 module.exports = {
