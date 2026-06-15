@@ -41,6 +41,14 @@ app.get("/", (req, res) => {
   res.send("Job Application Tracker API is running...");
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is healthy",
+    uptime: process.uptime(),
+  });
+});
+
 // Error Handler
 app.use(errorHandler);
 
