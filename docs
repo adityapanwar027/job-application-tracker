@@ -1,0 +1,334 @@
+# Job Application Tracker API Documentation
+
+## Base URL
+
+```http
+http://localhost:5000/api
+```
+
+## Authentication
+
+Protected routes require a JWT token.
+
+Example:
+
+```http
+Authorization: Bearer YOUR_TOKEN
+```
+
+## Register User
+
+### Endpoint
+
+```http
+POST /auth/register
+```
+
+### Request Body
+
+```json
+{
+  "name": "Aditya",
+  "email": "aditya@example.com",
+  "password": "password123"
+}
+```
+
+### Success Response
+
+```json
+{
+  "message": "User created successfully",
+  "user": {
+    "_id": "user_id",
+    "name": "Aditya",
+    "email": "aditya@example.com"
+  }
+}
+```
+
+## Login User
+
+### Endpoint
+
+```http
+POST /auth/login
+```
+
+### Request Body
+
+```json
+{
+  "email": "aditya@example.com",
+  "password": "password123"
+}
+```
+
+### Success Response
+
+```json
+{
+  "message": "Login successfully",
+  "token": "JWT_TOKEN"
+}
+```
+
+## Get User Profile
+
+### Endpoint
+
+```http
+GET /auth/profile
+```
+
+### Headers
+
+```http
+Authorization: Bearer JWT_TOKEN
+```
+
+### Success Response
+
+```json
+{
+  "_id": "user_id",
+  "name": "Aditya",
+  "email": "aditya@example.com"
+}
+```
+
+---
+
+## Update User Profile
+
+### Endpoint
+
+```http
+PUT /auth/profile
+```
+
+### Headers
+
+```http
+Authorization: Bearer JWT_TOKEN
+```
+
+### Request Body
+
+```json
+{
+  "name": "Aditya Panwar",
+  "email": "aditya.panwar@example.com"
+}
+```
+
+### Success Response
+
+```json
+{
+  "message": "Profile updated successfully"
+}
+```
+
+## Create Job
+
+### Endpoint
+
+```http
+POST /jobs
+```
+
+### Headers
+
+```http
+Authorization: Bearer JWT_TOKEN
+```
+
+### Request Body
+
+```json
+{
+  "company": "Google",
+  "position": "Frontend Developer",
+  "status": "Applied"
+}
+```
+
+### Success Response
+
+```json
+{
+  "_id": "job_id",
+  "company": "Google",
+  "position": "Frontend Developer",
+  "status": "Applied"
+}
+```
+
+---
+
+## Get All Jobs
+
+### Endpoint
+
+```http
+GET /jobs
+```
+
+### Headers
+
+```http
+Authorization: Bearer JWT_TOKEN
+```
+
+---
+
+## Get Single Job
+
+### Endpoint
+
+```http
+GET /jobs/:id
+```
+
+### Headers
+
+```http
+Authorization: Bearer JWT_TOKEN
+```
+
+---
+
+## Update Job
+
+### Endpoint
+
+```http
+PUT /jobs/:id
+```
+
+### Headers
+
+```http
+Authorization: Bearer JWT_TOKEN
+```
+
+### Request Body
+
+```json
+{
+  "status": "Interview"
+}
+```
+
+---
+
+## Delete Job
+
+### Endpoint
+
+```http
+DELETE /jobs/:id
+```
+
+### Headers
+
+```http
+Authorization: Bearer JWT_TOKEN
+```
+
+## Search Jobs
+
+### Endpoint
+
+```http
+GET /jobs?search=google
+```
+
+### Description
+
+Search jobs by company name or position.
+
+---
+
+## Filter Jobs
+
+### Endpoint
+
+```http
+GET /jobs?status=Interview
+```
+
+### Description
+
+Filter jobs by status.
+
+Available statuses:
+
+- Applied
+- Interview
+- Rejected
+- Offer
+
+---
+
+## Pagination
+
+### Endpoint
+
+```http
+GET /jobs?page=1&limit=5
+```
+
+### Description
+
+Get jobs page by page.
+
+---
+
+## Sorting
+
+### Latest First
+
+```http
+GET /jobs?sort=latest
+```
+
+### Oldest First
+
+```http
+GET /jobs?sort=oldest
+```
+
+### Company A-Z
+
+```http
+GET /jobs?sort=a-z
+```
+
+### Company Z-A
+
+```http
+GET /jobs?sort=z-a
+```
+
+---
+
+## Job Statistics
+
+### Endpoint
+
+```http
+GET /jobs/stats
+```
+
+### Success Response
+
+```json
+{
+  "Applied": 5,
+  "Interview": 2,
+  "Rejected": 1,
+  "Offer": 1
+}
+```
