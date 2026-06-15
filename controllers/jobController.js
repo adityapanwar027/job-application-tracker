@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
-const job = require("../models/Job");
-const Job = require("../models/Job");
+const job = require("../models/job");
+const Job = require("../models/job");
 const { create } = require("../models/User");
 
 // Create Job
