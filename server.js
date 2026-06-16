@@ -41,7 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Job Application Tracker API is running...");
+  res.send("CICD test");
 });
 
 app.get("/health", (req, res) => {
