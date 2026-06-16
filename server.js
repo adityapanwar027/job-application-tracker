@@ -2,6 +2,7 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
@@ -32,6 +33,7 @@ app.use(
 
 app.use(helmet());
 app.use(express.json());
+app.use(morgan("dev"));
 app.use(limiter);
 
 // Routes
