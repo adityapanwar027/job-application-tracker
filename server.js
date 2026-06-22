@@ -13,10 +13,10 @@ const errorHandler = require("./middleware/errorMiddleware");
 const app = express();
 app.set("trust proxy", 1);
 
-// Connect to MongoDB
+// Connect MongoDB
 connectDB();
 
-// Limiter
+// Rate Limiter
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -26,7 +26,7 @@ const limiter = rateLimit({
 // Middleware
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: true,
     credentials: true,
   })
 );
@@ -40,10 +40,12 @@ app.use(limiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 
+// Root Route
 app.get("/", (req, res) => {
   res.send("Job Application Tracker API is running...");
 });
 
+// Health Check
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
